@@ -1,3 +1,4 @@
+import 'package:ailatrieuphu/pages/NewGame.dart';
 import 'package:ailatrieuphu/screen/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -66,12 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                           ),
                         )),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Login(),
-                        ),
-                      );
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Login()), (route) => false);
                     },
                     child: Text(
                       'Đăng Nhập',
@@ -97,7 +93,9 @@ class WelcomeScreen extends StatelessWidget {
                           width: 3,
                           color: lightColor,
                         )),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LinhVuc()), (route) => false);
+                    },
                     child: Text(
                       'Chơi Ngay',
                       style: GoogleFonts.abel(

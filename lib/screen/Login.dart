@@ -1,7 +1,10 @@
+import 'package:ailatrieuphu/pages/Welcome.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:ailatrieuphu/screen/Fogot.dart';
 import 'package:ailatrieuphu/screen/Register.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
+import '../pages/Homepage.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -12,21 +15,41 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final formKey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
+  TextEditingController password = TextEditingController();
   bool hiddenPass = true;
+  bool isEmailValid(String email) {
+    return RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$').hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
         backgroundColor: kprimaryColor,
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WelcomeScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+              icon: const Icon(Icons.exit_to_app_outlined))
+        ],
       ),
       backgroundColor: kprimaryColor,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
+      body: Form(
+        key: formKey,
+        child: ListView(children: [
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(
@@ -67,67 +90,92 @@ class _LoginState extends State<Login> {
                     const SizedBox(
                       height: 30,
                     ),
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
+                      decoration: BoxDecoration(
+                        color: white,
+                        border: Border.all(
                           color: white,
-                          border: Border.all(
-                            color: white,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(left: 15.0),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              icon: Icon(
-                                Icons.people,
-                                color: Colors.black54,
-                              ),
-                              border: InputBorder.none,
-                              hintText: 'Tài Khoản',
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          controller: email,
+                          decoration: const InputDecoration(
+                            icon: Icon(
+                              Icons.email,
+                              color: Colors.black54,
                             ),
+                            border: InputBorder.none,
+                            hintText: 'Email',
                           ),
+                          //maxLength: 50,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: ((value) {
+                            if (value!.isEmpty) {
+                              return 'Enter your email';
+                            } else {
+                              return null;
+                            }
+                          }),
+                          onSaved: (newValue) {
+                            setState(() {
+                              email.text = newValue!;
+                            });
+                          },
                         ),
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Padding(
+                    Container(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
+                      decoration: BoxDecoration(
+                        color: white,
+                        border: Border.all(
                           color: white,
-                          border: Border.all(
-                            color: white,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: TextField(
-                            obscureText: hiddenPass,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(
-                                Icons.lock,
-                                color: black,
-                              ),
-                              border: InputBorder.none,
-                              hintText: 'Mật Khẩu',
-                              suffixIcon: IconButton(
-                                icon: hiddenPass ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
-                                color: Colors.black54,
-                                onPressed: () {
-                                  setState(() {
-                                    hiddenPass = !hiddenPass;
-                                  });
-                                },
-                              ),
-                            ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextFormField(
+                        controller: password,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        obscureText: hiddenPass,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: black,
+                          ),
+                          border: InputBorder.none,
+                          hintText: 'Mật Khẩu',
+                          suffixIcon: IconButton(
+                            icon: hiddenPass ? const Icon(Icons.visibility_off) : const Icon(Icons.visibility),
+                            color: Colors.black54,
+                            onPressed: () {
+                              setState(() {
+                                hiddenPass = !hiddenPass;
+                              });
+                            },
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Enter your PassWord';
+                          } else if (value.length < 6) {
+                            return 'Password not enough characters';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onSaved: ((newValue) {
+                          setState(() {
+                            password.text = newValue!;
+                          });
+                        }),
                       ),
                     ),
                     Container(
@@ -165,12 +213,34 @@ class _LoginState extends State<Login> {
                             ),
                           )),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Login(),
-                          ),
-                        );
+                        //Lưu trạng thái hiện tại của form khi thỏa mãn validator
+                        final isValid = formKey.currentState!.validate();
+                        if (isValid) {
+                          formKey.currentState?.save();
+                        }
+
+                        if (email.text.isEmpty || password.text.isEmpty) {
+                          QuickAlert.show(context: context, type: QuickAlertType.warning, text: 'Email hoặc mật khẩu không được để trống', confirmBtnColor: kprimaryColor);
+                        } else if (email.text.isNotEmpty && password.text.isNotEmpty) {
+                          if (isEmailValid(email.text) && password.text == '123456') {
+                            //QuickAlert.show(
+                            //   context: context, type: QuickAlertType.loading, text: 'Đăng nhập thành công', confirmBtnColor: kprimaryColor, autoCloseDuration: const Duration(seconds: 2));
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomePage(),
+                                ),
+                                (route) => false);
+                          } else {
+                            QuickAlert.show(context: context, type: QuickAlertType.error, confirmBtnColor: kprimaryColor, text: 'Email hoặc mật khẩu không đúng ');
+                          }
+                        } else {
+                          QuickAlert.show(context: context, type: QuickAlertType.error, text: 'Đăng nhập không thành công');
+                        }
+
+                        // var message = const SnackBar(
+                        //   content: Text('Login success!'),
+                        // );
                       },
                       child: Text(
                         'Login',
@@ -241,7 +311,7 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
-        ),
+        ]),
       ),
     );
   }

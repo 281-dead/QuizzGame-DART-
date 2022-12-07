@@ -1,5 +1,5 @@
+import 'package:ailatrieuphu/screen/Login.dart';
 import 'package:flutter/material.dart';
-import 'pages/Welcome.dart';
 
 void main() {
   runApp(const altp());
@@ -12,7 +12,7 @@ class altp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      home: Login(),
     );
   }
 }
