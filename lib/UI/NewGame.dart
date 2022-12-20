@@ -64,7 +64,7 @@ class _LinhVucState extends State<LinhVuc> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  width: 200,
+                  width: 250,
                   padding: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: white),

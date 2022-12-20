@@ -1,5 +1,5 @@
 class Question {
-  final int id;
+  final String id;
   final String title;
   final Map<String, bool> options;
 

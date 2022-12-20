@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main(args) async {
-  //vì dùng thư viện firebase nên cần khởi tạo nó để gọi các code base xử lý
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const altp());

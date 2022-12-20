@@ -1,4 +1,5 @@
 import 'package:ailatrieuphu/models/Question_models.dart';
+import 'package:ailatrieuphu/models/db_connect.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:ailatrieuphu/widget/nextButton.dart';
 import 'package:ailatrieuphu/widget/question_widget.dart';
@@ -25,59 +26,13 @@ class _PlayGameState extends State<PlayGame> {
   late User _user;
   //Credit
   late double _credit = 0;
-  //List question Lịch Sử
-  List<Question> lsQuestion = [
-    Question(
-      id: 1,
-      title: ' Ai là người đặt tên nước ta là Vạn Xuân?',
-      options: {'Lí Bạch': false, 'Lý Bôn': true, 'Ngô Quyền': false, 'Lý Công Uẩn': false},
-    ),
-    Question(
-      id: 2,
-      title: 'Quê của Đại Tướng Võ Nguyên Giáp ở đâu?',
-      options: {'Quảng Bình': true, 'Quảng Ngãi': false, 'Đà Nẵng': false, 'Thanh Hoá': false},
-    ),
-    Question(
-      id: 3,
-      title: ' Tên thật của nữ vương đầu tiên và cuối cùng của nước ta?',
-      options: {'Lý Phật Thiên': false, 'Lý Phật Kim': false, 'Trưng Trắc': true, 'Trưng Nhị': false},
-    ),
-    Question(
-      id: 4,
-      title: '. Có bao nhiêu đời vua vào thời Lý?',
-      options: {'9': true, '10': false, '12': false, '5': false},
-    ),
-    Question(
-      id: 5,
-      title: 'Ai là người đánh đuổi quân Thanh?',
-      options: {'Nguyễn Nhạc': false, 'Nguyễn Huệ': true, 'Nguyễn Lữ': false, 'Nguyễn Ánh': false},
-    ),
-    Question(
-      id: 6,
-      title: 'Bố Cái Đại Vương là ai?',
-      options: {'Phùng Hải': false, 'Ngô Quyền': false, 'Phùng Hưng': true, 'Lý Bí': false},
-    ),
-    Question(
-      id: 7,
-      title: 'Vua Đen là ai?',
-      options: {'Mai Thúc Loan': true, 'Lê Long Việt': false, 'Đà Nẵng': false, 'Quảng Nam': false},
-    ),
-    Question(
-      id: 8,
-      title: 'Vị vua nào là con rối của người Pháp?',
-      options: {'Hàm Nghi': false, 'Đồng Khánh': true, 'Thành Thái': false, 'Thiệu Trị': false},
-    ),
-    Question(
-      id: 9,
-      title: 'Quân đội Đồng minh các nước vào nước ta sau năm 1945 là?',
-      options: {'quân Anh, quân Mĩ': false, 'quân Pháp, quân Anh': false, 'Quân Anh, quân Trung Hoa Dân quốc': true, 'quân Pháp, quân Trung Hoa Dân quốc': false},
-    ),
-    Question(
-      id: 10,
-      title: 'Sau cách mạng tháng Tám, Bác Hồ đã từng nói: “Một dân tộc dốt là một dân tộc?',
-      options: {' Đói': false, 'Yếu': true, 'Thất Bại': false, 'Dốt': false},
-    ),
-  ];
+  var db = DbConnect();
+  late Future extractedData;
+
+  //get data
+  Future<List<Question>> getData() async {
+    return db.fetchQuestion();
+  }
 
   //index cho loop
   int index = 0;
@@ -90,15 +45,15 @@ class _PlayGameState extends State<PlayGame> {
   int demHeart = 5;
 
   //funtcion chuyen cau hoi
-  void nextQuestion() {
-    if (index == lsQuestion.length - 1) {
+  void nextQuestion(int questionLenght) {
+    if (index == questionLenght - 1) {
       //diaglog khi het cau hoi
       showDialog(
           barrierDismissible: false, //dialog se tat  khi user click ngoai pham vi diaglog
           context: context,
           builder: (context) => Result(
                 result: score,
-                questionLenght: lsQuestion.length,
+                questionLenght: questionLenght,
                 onPress: startOver,
               ));
     } else {
@@ -151,176 +106,210 @@ class _PlayGameState extends State<PlayGame> {
     // TODO: implement initState
     _user = widget.user;
     _credit = widget.credit;
+    extractedData = getData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kprimaryColor,
-      appBar: AppBar(
-        title: const Text('Ai Là Triệu Phú'),
-        backgroundColor: kprimaryColor,
-        shadowColor: Colors.transparent,
-        actions: [
-          //Điểm
-          Padding(
-            padding: const EdgeInsets.all(18),
-            child: Text(
-              'Score : $score',
-              style: const TextStyle(
-                fontSize: 18,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: white,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(10))),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    widget.user.displayName!,
-                    style: GoogleFonts.abel(
-                      color: white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+    return FutureBuilder(
+      future: extractedData as Future<List<Question>>,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('${snapshot.error}'),
+            );
+          } else if (snapshot.hasData) {
+            var extractedData = snapshot.data as List<Question>;
+            return Scaffold(
+              backgroundColor: kprimaryColor,
+              appBar: AppBar(
+                title: const Text('Ai Là Triệu Phú'),
+                backgroundColor: kprimaryColor,
+                shadowColor: Colors.transparent,
+                actions: [
+                  //Điểm
+                  Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Text(
+                      'Score : $score',
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          _credit.round().toString(),
-                          style: GoogleFonts.abel(
+                ],
+              ),
+              body: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
                             color: white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
                           ),
+                          borderRadius: const BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            widget.user.displayName!,
+                            style: GoogleFonts.abel(
+                              color: white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  _credit.round().toString(),
+                                  style: GoogleFonts.abel(
+                                    color: white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.diamond_outlined,
+                                size: 20,
+                                color: Colors.yellow.withOpacity(0.8),
+                              ),
+                            ],
+                          ),
+                          //const SizedBox(width: 20),
+
+                          const SizedBox(width: 20),
+                          Container(
+                            padding: const EdgeInsets.only(left: 2.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //generate list icons (mỗi icon tương ứng với một lượt chơi)
+                                ...List.generate(
+                                  demHeart,
+                                  (index) => Icon(
+                                    Icons.heart_broken,
+                                    color: Colors.red.withOpacity(0.8),
+                                    size: 20.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25.0,
+                    ),
+                    QuestionWidget(
+                      question: extractedData[index].title,
+                      indexAction: index,
+                      totalQuestions: extractedData.length,
+                    ),
+                    const Divider(
+                      color: white,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    for (int i = 0; i < extractedData[index].options.length; i++)
+                      GestureDetector(
+                        onTap: () => CheckAndUpdateAnswer(extractedData[index].options.values.toList()[i]),
+                        child: OptionCard(
+                          option: extractedData[index].options.keys.toList()[i],
+                          color: isPress
+                              ? extractedData[index].options.values.toList()[i] == true
+                                  ? correct
+                                  : incorrect
+                              : white,
                         ),
                       ),
-                      Icon(
-                        Icons.diamond_outlined,
-                        size: 20,
-                        color: Colors.yellow.withOpacity(0.8),
-                      ),
-                    ],
-                  ),
-                  //const SizedBox(width: 20),
-
-                  const SizedBox(width: 20),
-                  Container(
-                    padding: const EdgeInsets.only(left: 2.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    const SizedBox(height: 80.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        //generate list icons (mỗi icon tương ứng với một lượt chơi)
-                        ...List.generate(
-                          demHeart,
-                          (index) => Icon(
-                            Icons.heart_broken,
-                            color: Colors.red.withOpacity(0.8),
-                            size: 20.0,
+                        GestureDetector(
+                          onTap: () {
+                            showDialog5050(context);
+                          },
+                          child: Image.asset(
+                            'assets/images/50-50.png',
+                            fit: BoxFit.cover,
+                            height: 55,
+                            width: 70,
+                          ),
+                        ),
+                        const SizedBox(width: 25.0),
+                        GestureDetector(
+                          onTap: () {
+                            showDialogCall(context);
+                          },
+                          child: Image.asset(
+                            'assets/images/phone.png',
+                            fit: BoxFit.cover,
+                            height: 55,
+                            width: 70,
+                          ),
+                        ),
+                        const SizedBox(width: 25.0),
+                        GestureDetector(
+                          onTap: () {
+                            showDialogHelp(context);
+                          },
+                          child: Image.asset(
+                            'assets/images/help.png',
+                            fit: BoxFit.cover,
+                            height: 55,
+                            width: 70,
                           ),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 25.0,
-            ),
-            QuestionWidget(
-              question: lsQuestion[index].title,
-              indexAction: index,
-              totalQuestions: lsQuestion.length,
-            ),
-            const Divider(
-              color: white,
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            for (int i = 0; i < lsQuestion[index].options.length; i++)
-              GestureDetector(
-                onTap: () => CheckAndUpdateAnswer(lsQuestion[index].options.values.toList()[i]),
-                child: OptionCard(
-                  option: lsQuestion[index].options.keys.toList()[i],
-                  color: isPress
-                      ? lsQuestion[index].options.values.toList()[i] == true
-                          ? correct
-                          : incorrect
-                      : white,
+                    //const SizedBox(height: 10.3),
+                  ],
                 ),
               ),
-            const SizedBox(height: 80.0),
-            Row(
+              floatingActionButton: GestureDetector(
+                onTap: () => nextQuestion(extractedData.length),
+                child: Container(height: 40, padding: const EdgeInsets.symmetric(horizontal: 15), child: const NextButton()),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            );
+          }
+        } else {
+          return Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    showDialog5050(context);
-                  },
-                  child: Image.asset(
-                    'assets/images/50-50.png',
-                    fit: BoxFit.cover,
-                    height: 55,
-                    width: 70,
-                  ),
-                ),
-                const SizedBox(width: 25.0),
-                GestureDetector(
-                  onTap: () {
-                    showDialogCall(context);
-                  },
-                  child: Image.asset(
-                    'assets/images/phone.png',
-                    fit: BoxFit.cover,
-                    height: 55,
-                    width: 70,
-                  ),
-                ),
-                const SizedBox(width: 25.0),
-                GestureDetector(
-                  onTap: () {
-                    showDialogHelp(context);
-                  },
-                  child: Image.asset(
-                    'assets/images/help.png',
-                    fit: BoxFit.cover,
-                    height: 55,
-                    width: 70,
+              children: const [
+                CircularProgressIndicator(),
+                SizedBox(height: 20),
+                Text(
+                  'Đợi chút nha, dữ liệu đang tải...',
+                  style: TextStyle(
+                    decoration: TextDecoration.none,
+                    color: kprimaryColor,
+                    fontSize: 18,
                   ),
                 ),
               ],
             ),
-            //const SizedBox(height: 10.3),
-          ],
-        ),
-      ),
-      floatingActionButton: Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: NextButton(
-            nextQuestion: nextQuestion,
-          )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          );
+        }
+        return const Center(
+          child: Text('No data'),
+        );
+      },
     );
   }
 
