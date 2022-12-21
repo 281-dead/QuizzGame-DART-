@@ -176,6 +176,7 @@ class _BuyCreditState extends State<BuyCredit> {
                         labelText = "Tiếp tục mua Credit";
                         _credit += _currentValue;
                       });
+                      // Navigator.of(context).pop();
                     },
                     child: const Text(
                       'Mua',

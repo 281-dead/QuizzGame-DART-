@@ -37,6 +37,7 @@ class _PlayGameOffState extends State<PlayGameOff> {
   bool isAlreadyselect = false;
   //khai báo số lượt chơi của người chơi
   int demHeart = 5;
+  bool check = false, check1 = false, check2 = false;
 
   //funtcion chuyen cau hoi
   void nextQuestion(int questionLenght) {
@@ -210,9 +211,11 @@ class _PlayGameOffState extends State<PlayGameOff> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            showDialog5050(context);
-                          },
+                          onTap: check
+                              ? null
+                              : () {
+                                  showDialog5050(context);
+                                },
                           child: Image.asset(
                             'assets/images/50-50.png',
                             fit: BoxFit.cover,
@@ -222,9 +225,11 @@ class _PlayGameOffState extends State<PlayGameOff> {
                         ),
                         const SizedBox(width: 25.0),
                         GestureDetector(
-                          onTap: () {
-                            showDialogCall(context);
-                          },
+                          onTap: check1
+                              ? null
+                              : () {
+                                  showDialogCall(context);
+                                },
                           child: Image.asset(
                             'assets/images/phone.png',
                             fit: BoxFit.cover,
@@ -234,9 +239,11 @@ class _PlayGameOffState extends State<PlayGameOff> {
                         ),
                         const SizedBox(width: 25.0),
                         GestureDetector(
-                          onTap: () {
-                            showDialogHelp(context);
-                          },
+                          onTap: check2
+                              ? null
+                              : () {
+                                  showDialogHelp(context);
+                                },
                           child: Image.asset(
                             'assets/images/help.png',
                             fit: BoxFit.cover,
@@ -347,7 +354,44 @@ class _PlayGameOffState extends State<PlayGameOff> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          '50/50',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('A và D là 2 phương án sai ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(
@@ -426,7 +470,44 @@ class _PlayGameOffState extends State<PlayGameOff> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check1 = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'GỌI ĐIỆN THOẠI',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('Tôi đang phân vân giữa 2 đáp án B và C ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(
@@ -505,7 +586,44 @@ class _PlayGameOffState extends State<PlayGameOff> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check2 = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'GỌI ĐIỆN THOẠI',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('Tôi đang phân vân giữa 2 đáp án B và C ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(

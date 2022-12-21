@@ -28,11 +28,6 @@ class _PlayGameState extends State<PlayGame> {
   late double _credit = 0;
   // var db = DbConnect();
   late Future extractedData;
-
-  // //get data
-  // Future<List<Question>> getData() async {
-  //   return db.fetchQuestion();
-  // }
   //index cho loop
   int index = 0;
   //diem
@@ -42,6 +37,8 @@ class _PlayGameState extends State<PlayGame> {
   bool isAlreadyselect = false;
   //khai báo số lượt chơi của người chơi
   int demHeart = 5;
+  //check tro giup
+  bool check = false, check1 = false, check2 = false;
 
   //funtcion chuyen cau hoi
   void nextQuestion(int questionLenght) {
@@ -239,9 +236,11 @@ class _PlayGameState extends State<PlayGame> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            showDialog5050(context);
-                          },
+                          onTap: check
+                              ? null
+                              : () {
+                                  showDialog5050(context);
+                                },
                           child: Image.asset(
                             'assets/images/50-50.png',
                             fit: BoxFit.cover,
@@ -251,9 +250,11 @@ class _PlayGameState extends State<PlayGame> {
                         ),
                         const SizedBox(width: 25.0),
                         GestureDetector(
-                          onTap: () {
-                            showDialogCall(context);
-                          },
+                          onTap: check1
+                              ? null
+                              : () {
+                                  showDialogCall(context);
+                                },
                           child: Image.asset(
                             'assets/images/phone.png',
                             fit: BoxFit.cover,
@@ -263,9 +264,11 @@ class _PlayGameState extends State<PlayGame> {
                         ),
                         const SizedBox(width: 25.0),
                         GestureDetector(
-                          onTap: () {
-                            showDialogHelp(context);
-                          },
+                          onTap: check2
+                              ? null
+                              : () {
+                                  showDialogHelp(context);
+                                },
                           child: Image.asset(
                             'assets/images/help.png',
                             fit: BoxFit.cover,
@@ -376,7 +379,44 @@ class _PlayGameState extends State<PlayGame> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          '50/50',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('A và D là 2 phương án sai ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(
@@ -455,7 +495,44 @@ class _PlayGameState extends State<PlayGame> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check1 = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'Gọi điện thoại',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('Tôi đang phân phân giữa hai đáp án  A và B ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(
@@ -534,7 +611,44 @@ class _PlayGameState extends State<PlayGame> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        check2 = true;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: ((context) => AlertDialog(
+                                content: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 0),
+                                      decoration: const BoxDecoration(
+                                        color: boldBlue,
+                                      ),
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          'HỎI Ý KIẾN KHÁN GIẢ',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                    const Text('Tôi đang phân phân giữa hai đáp án  A và B ')
+                                  ],
+                                ),
+                              )));
+                    },
                     child: const Text(
                       'Chọn',
                       style: TextStyle(

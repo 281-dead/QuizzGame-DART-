@@ -1,9 +1,25 @@
 import 'package:ailatrieuphu/widget/Colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Account extends StatelessWidget {
-  const Account({super.key});
+class Account extends StatefulWidget {
+  Account({super.key, required this.user});
+  User user;
+
+  @override
+  State<Account> createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  late User _user;
+
+  TextEditingController displayName = TextEditingController();
+  @override
+  void initState() {
+    _user = widget.user;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +44,38 @@ class Account extends StatelessWidget {
             children: [
               const SizedBox(height: 60),
               ClipOval(
-                child: Image.asset(
-                  'assets/images/avatar.png',
-                  fit: BoxFit.cover,
-                  height: 180,
-                  width: 180,
+                child: Material(
+                  color: Colors.grey.withOpacity(0.3),
+                  child: _user.photoURL != null
+                      ? ClipOval(
+                          child: Material(
+                            color: Colors.grey.withOpacity(0.3),
+                            child: Image.network(
+                              _user.photoURL!,
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        )
+                      : ClipOval(
+                          child: Material(
+                            color: Colors.grey.withOpacity(0.3),
+                            child: const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(
+                                Icons.person,
+                                size: 80,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () {},
                 child: Text(
-                  'Đổi hình đại diện',
+                  _user.displayName!,
                   style: TextStyle(
                     fontSize: 16,
                     fontStyle: FontStyle.italic,
@@ -59,13 +95,14 @@ class Account extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 5),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
                     child: TextField(
+                      controller: displayName,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.people, color: black),
+                        prefixIcon: const Icon(Icons.people, color: black),
                         border: InputBorder.none,
-                        hintText: 'Tài Khoản',
+                        hintText: _user.displayName,
                       ),
                     ),
                   ),
@@ -82,65 +119,19 @@ class Account extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 5),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
                     child: TextField(
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email, color: black),
+                        prefixIcon: const Icon(Icons.email, color: black),
                         border: InputBorder.none,
-                        hintText: 'Email',
+                        hintText: _user.email!,
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    border: Border.all(
-                      color: white,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock, color: black),
-                        border: InputBorder.none,
-                        hintText: 'Mật Khẩu',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: white,
-                    border: Border.all(
-                      color: white,
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock, color: black),
-                        border: InputBorder.none,
-                        hintText: 'Nhập Lại Mật Khẩu',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: lightColor,
@@ -152,10 +143,12 @@ class Account extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Account()),
-                  );
+                  if (_user.displayName != null && _user.email != null) {
+                    _user.updateDisplayName(displayName.text);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cập nhật thành công!')));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Có lỗi xảy ra!')));
+                  }
                 },
                 child: Text(
                   'Cập Nhật',
