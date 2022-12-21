@@ -1,5 +1,5 @@
 import 'package:ailatrieuphu/UI/Login.dart';
-import 'package:ailatrieuphu/UI/PlayGameOff.dart';
+import 'package:ailatrieuphu/UI/NewGameOff.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
@@ -94,7 +94,7 @@ class WelcomeScreen extends StatelessWidget {
                           color: lightColor,
                         )),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayGameOff()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LinhVucOff()));
                     },
                     child: Text(
                       'Chơi Ngay',

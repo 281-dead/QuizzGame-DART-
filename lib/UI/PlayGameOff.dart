@@ -1,32 +1,33 @@
 import 'package:ailatrieuphu/models/Question_models.dart';
-import 'package:ailatrieuphu/models/db_connect.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:ailatrieuphu/widget/nextButton.dart';
 import 'package:ailatrieuphu/widget/question_widget.dart';
 import 'package:ailatrieuphu/widget/result.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../Widget/option_Card.dart';
 
 class PlayGameOff extends StatefulWidget {
-  const PlayGameOff({super.key});
+  const PlayGameOff({super.key, required this.lsQuestion});
+  final lsQuestion;
 
   @override
   State<PlayGameOff> createState() => _PlayGameOffState();
 }
 
 class _PlayGameOffState extends State<PlayGameOff> {
-  //Credit
-  late final double _credit = 0;
-  var db = DbConnect();
+  //Khai báo authentication của flutterAuth
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // var db = DbConnect();
   late Future extractedData;
 
-  //get data
-  Future<List<Question>> getData() async {
-    return db.fetchQuestion();
-  }
-
+  // //get data
+  // Future<List<Question>> getData() async {
+  //   return db.fetchQuestion();
+  // }
   //index cho loop
   int index = 0;
   //diem
@@ -97,7 +98,7 @@ class _PlayGameOffState extends State<PlayGameOff> {
   @override
   void initState() {
     // TODO: implement initState
-    extractedData = getData();
+    extractedData = widget.lsQuestion;
     super.initState();
   }
 
@@ -149,29 +150,15 @@ class _PlayGameOffState extends State<PlayGameOff> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          const SizedBox(width: 20),
-                          Row(
-                            children: [
-                              Container(
-                                child: Text(
-                                  _credit.round().toString(),
-                                  style: GoogleFonts.abel(
-                                    color: white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.diamond_outlined,
-                                size: 20,
-                                color: Colors.yellow.withOpacity(0.8),
-                              ),
-                            ],
+                          Text(
+                            'User Name',
+                            style: GoogleFonts.abel(
+                              color: white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          //const SizedBox(width: 20),
-
-                          const SizedBox(width: 20),
+                          const SizedBox(width: 40),
                           Container(
                             padding: const EdgeInsets.only(left: 2.0),
                             child: Row(

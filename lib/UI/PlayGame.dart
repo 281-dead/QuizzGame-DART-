@@ -1,5 +1,4 @@
 import 'package:ailatrieuphu/models/Question_models.dart';
-import 'package:ailatrieuphu/models/db_connect.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:ailatrieuphu/widget/nextButton.dart';
 import 'package:ailatrieuphu/widget/question_widget.dart';
@@ -11,9 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Widget/option_Card.dart';
 
 class PlayGame extends StatefulWidget {
-  PlayGame({super.key, required this.user, required this.credit});
+  PlayGame({super.key, required this.user, required this.credit, required this.lsQuestion});
   User user;
   final double credit;
+  final lsQuestion;
 
   @override
   State<PlayGame> createState() => _PlayGameState();
@@ -26,14 +26,13 @@ class _PlayGameState extends State<PlayGame> {
   late User _user;
   //Credit
   late double _credit = 0;
-  var db = DbConnect();
+  // var db = DbConnect();
   late Future extractedData;
 
-  //get data
-  Future<List<Question>> getData() async {
-    return db.fetchQuestion();
-  }
-
+  // //get data
+  // Future<List<Question>> getData() async {
+  //   return db.fetchQuestion();
+  // }
   //index cho loop
   int index = 0;
   //diem
@@ -106,7 +105,7 @@ class _PlayGameState extends State<PlayGame> {
     // TODO: implement initState
     _user = widget.user;
     _credit = widget.credit;
-    extractedData = getData();
+    extractedData = widget.lsQuestion;
     super.initState();
   }
 

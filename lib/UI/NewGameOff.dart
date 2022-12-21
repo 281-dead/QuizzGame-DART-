@@ -1,5 +1,5 @@
-import 'package:ailatrieuphu/UI/Homepage.dart';
-import 'package:ailatrieuphu/UI/PlayGame.dart';
+import 'package:ailatrieuphu/UI/PlayGameOff.dart';
+import 'package:ailatrieuphu/UI/Welcome.dart';
 import 'package:ailatrieuphu/models/Question_models.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,19 +8,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../models/db_connect.dart';
 
-class LinhVuc extends StatefulWidget {
-  final double credit;
-  final User user;
-  const LinhVuc({super.key, required this.user, required this.credit});
+class LinhVucOff extends StatefulWidget {
+  const LinhVucOff({super.key});
 
   @override
-  State<LinhVuc> createState() => _LinhVucState();
+  State<LinhVucOff> createState() => _LinhVucOffState();
 }
 
-class _LinhVucState extends State<LinhVuc> {
+class _LinhVucOffState extends State<LinhVucOff> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late User user;
-  late double _credit;
   int iconHeart = 5;
   var db = DbConnect();
   late Future question1;
@@ -50,8 +46,6 @@ class _LinhVucState extends State<LinhVuc> {
   //Gán đối tượng cho user
   @override
   void initState() {
-    user = widget.user;
-    _credit = widget.credit;
     question1 = getData();
     question2 = getData1();
     question3 = getData2();
@@ -74,15 +68,12 @@ class _LinhVucState extends State<LinhVuc> {
               margin: const EdgeInsets.only(right: 310, bottom: 5),
               child: IconButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                          user: user,
-                          credit: _credit,
-                        ),
-                      ),
-                      (route) => false);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WelcomeScreen(),
+                    ),
+                  );
                 },
                 icon: Icon(
                   Icons.arrow_circle_left_outlined,
@@ -95,7 +86,9 @@ class _LinhVucState extends State<LinhVuc> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(
-                  width: 250,
+                  margin: const EdgeInsets.only(left: 18),
+                  width: 350,
+                  height: 45,
                   padding: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
                     border: Border.all(color: white),
@@ -104,10 +97,10 @@ class _LinhVucState extends State<LinhVuc> {
                     ),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        widget.user.displayName!,
+                        'User Name',
                         style: GoogleFonts.abel(
                           color: white,
                           fontSize: 18,
@@ -134,27 +127,6 @@ class _LinhVucState extends State<LinhVuc> {
                   ),
                 ),
                 const SizedBox(width: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      child: Text(
-                        _credit.round().toString(),
-                        style: GoogleFonts.abel(
-                          color: white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 3),
-                    Icon(
-                      Icons.diamond_outlined,
-                      size: 20,
-                      color: Colors.yellow.withOpacity(0.8),
-                    ),
-                  ],
-                ),
               ],
             ),
             const SizedBox(
@@ -184,9 +156,7 @@ class _LinhVucState extends State<LinhVuc> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGame(
-                      user: user,
-                      credit: _credit,
+                    builder: (context) => PlayGameOff(
                       lsQuestion: question1,
                     ),
                   ),
@@ -217,9 +187,7 @@ class _LinhVucState extends State<LinhVuc> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGame(
-                      user: user,
-                      credit: _credit,
+                    builder: (context) => PlayGameOff(
                       lsQuestion: question2,
                     ),
                   ),
@@ -250,9 +218,7 @@ class _LinhVucState extends State<LinhVuc> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGame(
-                      user: user,
-                      credit: _credit,
+                    builder: (context) => PlayGameOff(
                       lsQuestion: question3,
                     ),
                   ),
@@ -283,9 +249,7 @@ class _LinhVucState extends State<LinhVuc> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlayGame(
-                      user: user,
-                      credit: _credit,
+                    builder: (context) => PlayGameOff(
                       lsQuestion: question4,
                     ),
                   ),
