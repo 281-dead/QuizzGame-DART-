@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:ailatrieuphu/models/Question_models.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
+import 'package:ailatrieuphu/widget/ResultOff.dart';
 import 'package:ailatrieuphu/widget/nextButton.dart';
 import 'package:ailatrieuphu/widget/question_widget.dart';
-import 'package:ailatrieuphu/widget/result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +48,7 @@ class _PlayGameOffState extends State<PlayGameOff> {
       showDialog(
           barrierDismissible: false, //dialog se tat  khi user click ngoai pham vi diaglog
           context: context,
-          builder: (context) => Result(
+          builder: (context) => ResultOff(
                 result: score,
                 questionLenght: questionLenght,
                 onPress: startOver,
@@ -68,6 +70,26 @@ class _PlayGameOffState extends State<PlayGameOff> {
         ));
       }
     }
+  }
+
+  int timer = 15;
+  String showtimer = "15";
+  int i = 1;
+
+  void starttimer() async {
+    const onesec = Duration(seconds: 1);
+    Timer.periodic(onesec, (Timer t) {
+      if (mounted) {
+        setState(() {
+          if (timer < 1) {
+            t.cancel();
+          } else {
+            timer = timer - 1;
+          }
+          showtimer = timer.toString();
+        });
+      }
+    });
   }
 
   //function change color
@@ -100,7 +122,15 @@ class _PlayGameOffState extends State<PlayGameOff> {
   void initState() {
     // TODO: implement initState
     extractedData = widget.lsQuestion;
+    starttimer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    starttimer();
+    super.dispose();
   }
 
   @override
@@ -206,7 +236,28 @@ class _PlayGameOffState extends State<PlayGameOff> {
                               : white,
                         ),
                       ),
-                    const SizedBox(height: 80.0),
+                    const SizedBox(height: 15.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text(
+                              showtimer,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -258,7 +309,12 @@ class _PlayGameOffState extends State<PlayGameOff> {
                 ),
               ),
               floatingActionButton: GestureDetector(
-                onTap: () => nextQuestion(extractedData.length),
+                onTap: () {
+                  setState(() {
+                    timer = 30;
+                  });
+                  nextQuestion(extractedData.length);
+                },
                 child: Container(height: 40, padding: const EdgeInsets.symmetric(horizontal: 15), child: const NextButton()),
               ),
               floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -628,6 +684,27 @@ class _PlayGameOffState extends State<PlayGameOff> {
                       'Chọn',
                       style: TextStyle(
                         color: Colors.yellow,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: incorrect,
+                      minimumSize: const Size(300, 50),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      'Cài đặt',
+                      style: GoogleFonts.abel(
+                        color: white,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

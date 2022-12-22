@@ -1,37 +1,25 @@
 import 'package:ailatrieuphu/UI/Homepage.dart';
+import 'package:ailatrieuphu/UI/NewGameOff.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Result extends StatefulWidget {
-  const Result(
-      {super.key,
-      required this.result,
-      required this.questionLenght,
-      //required this.onPress,
-      required this.user,
-      required this.credit});
+class ResultOff extends StatefulWidget {
+  const ResultOff({
+    super.key,
+    required this.result,
+    required this.questionLenght,
+    required this.onPress,
+  });
   final int result;
   final int questionLenght;
-  //final VoidCallback onPress;
-  final User user;
-  final double credit;
+  final VoidCallback onPress;
 
   @override
-  State<Result> createState() => _ResultState();
+  State<ResultOff> createState() => _ResultOffState();
 }
 
-class _ResultState extends State<Result> {
-  late User user;
-  late double _credit;
-  @override
-  void initState() {
-    // TODO: implement initState
-    _credit = widget.credit;
-    user = widget.user;
-    super.initState();
-  }
-
+class _ResultOffState extends State<ResultOff> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -78,7 +66,7 @@ class _ResultState extends State<Result> {
             const SizedBox(height: 28),
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(user: user, credit: _credit)));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LinhVucOff()));
               },
               child: const Text(
                 'Bắt đầu lại',

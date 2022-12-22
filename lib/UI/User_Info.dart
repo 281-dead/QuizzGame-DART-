@@ -102,13 +102,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              Text(
-                _user.displayName!,
-                style: const TextStyle(
-                  color: white,
-                  fontSize: 26,
-                ),
-              ),
+              _user.displayName != null
+                  ? Text(
+                      _user.displayName!,
+                      style: const TextStyle(
+                        color: white,
+                        fontSize: 26,
+                      ),
+                    )
+                  : const Text('User Name'),
               const SizedBox(height: 8.0),
               Text(
                 '( ${_user.email!} )',

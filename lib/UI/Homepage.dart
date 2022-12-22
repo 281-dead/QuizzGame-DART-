@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 25),
+              const SizedBox(height: 13),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
               ClipOval(
                 child: Material(
                   color: Colors.grey.withOpacity(0.3),
@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: Text(
-                  'Trò chơi mới',
+                  'Bắt đầu chơi',
                   style: GoogleFonts.abel(
                     color: white,
                     fontSize: 20,
@@ -255,6 +255,48 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Text(
                   'Mua Credit',
+                  style: GoogleFonts.abel(
+                    color: white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: incorrect,
+                  minimumSize: const Size(300, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                  ),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'Bạn bè',
+                  style: GoogleFonts.abel(
+                    color: white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: incorrect,
+                  minimumSize: const Size(300, 50),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
+                    ),
+                  ),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'Cài đặt',
                   style: GoogleFonts.abel(
                     color: white,
                     fontSize: 20,

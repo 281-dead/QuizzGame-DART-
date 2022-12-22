@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ailatrieuphu/models/Question_models.dart';
 import 'package:ailatrieuphu/widget/Colors.dart';
 import 'package:ailatrieuphu/widget/nextButton.dart';
@@ -50,7 +52,8 @@ class _PlayGameState extends State<PlayGame> {
           builder: (context) => Result(
                 result: score,
                 questionLenght: questionLenght,
-                onPress: startOver,
+                user: _user,
+                credit: _credit,
               ));
     } else {
       if (isPress) {
@@ -69,6 +72,26 @@ class _PlayGameState extends State<PlayGame> {
         ));
       }
     }
+  }
+
+  int timer = 30;
+  String showtimer = "30";
+  int i = 1;
+
+  void starttimer() async {
+    const onesec = Duration(seconds: 1);
+    Timer.periodic(onesec, (Timer t) {
+      if (mounted) {
+        setState(() {
+          if (timer < 1) {
+            t.cancel();
+          } else {
+            timer = timer - 1;
+          }
+          showtimer = timer.toString();
+        });
+      }
+    });
   }
 
   //function change color
@@ -103,7 +126,15 @@ class _PlayGameState extends State<PlayGame> {
     _user = widget.user;
     _credit = widget.credit;
     extractedData = widget.lsQuestion;
+    starttimer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    starttimer();
+    super.dispose();
   }
 
   @override
@@ -231,7 +262,28 @@ class _PlayGameState extends State<PlayGame> {
                               : white,
                         ),
                       ),
-                    const SizedBox(height: 80.0),
+                    const SizedBox(height: 15.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Center(
+                            child: Text(
+                              showtimer,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -283,7 +335,12 @@ class _PlayGameState extends State<PlayGame> {
                 ),
               ),
               floatingActionButton: GestureDetector(
-                onTap: () => nextQuestion(extractedData.length),
+                onTap: () {
+                  setState(() {
+                    timer = 30;
+                  });
+                  nextQuestion(extractedData.length);
+                },
                 child: Container(height: 40, padding: const EdgeInsets.symmetric(horizontal: 15), child: const NextButton()),
               ),
               floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

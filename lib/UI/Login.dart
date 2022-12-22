@@ -195,7 +195,7 @@ class _LoginState extends State<Login> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPassword()));
                             },
                             child: Text(
-                              'Forgot PassWord',
+                              'Forgot Password',
                               style: GoogleFonts.abel(
                                 color: white.withOpacity(0.9),
                                 fontSize: 17,
