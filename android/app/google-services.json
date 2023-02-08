@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "656178202851",
+    "firebase_url": "https://quizzapp-503b2-default-rtdb.firebaseio.com",
     "project_id": "quizzapp-503b2",
     "storage_bucket": "quizzapp-503b2.appspot.com"
   },
